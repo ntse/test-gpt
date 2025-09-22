@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: svc_catalogue
+      POSTGRES_USER: svc_user
+      POSTGRES_PASSWORD: svc_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U svc_user -d svc_catalogue"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://svc_user:svc_pass@db:5432/svc_catalogue
+      AUTH_TOKEN: change-me
+    ports:
+      - "8000:8000"
+    command: uvicorn svc_catalogue.main:app --host 0.0.0.0 --port 8000
+
+volumes:
+  pgdata:
