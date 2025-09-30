@@ -1,4 +1,6 @@
 PYTHON ?= python3
+UV ?= uv
+UV_CACHE_DIR ?= $(PWD)/.uv-cache
 VENV ?= .venv
 ACTIVATE = source $(VENV)/bin/activate
 PYTHONPATH := src
@@ -6,19 +8,17 @@ PYTHONPATH := src
 .PHONY: install lint format test coverage run openapi docker-build docker-up docker-down clean
 
 install:
-	uv venv --python $(PYTHON) $(VENV)
-	uv pip install --python $(VENV)/bin/python -e .[dev]
+	UV_CACHE_DIR=$(UV_CACHE_DIR) $(UV) venv --python $(PYTHON) $(VENV)
+	UV_CACHE_DIR=$(UV_CACHE_DIR) $(UV) pip install --python $(VENV)/bin/python -e .[dev]
 
 lint:
-	$(ACTIVATE) && ruff check src tests
 	$(ACTIVATE) && black --check src tests
 
 format:
-	$(ACTIVATE) && black src tests
 	$(ACTIVATE) && ruff check --fix src tests
 
 test:
-	$(ACTIVATE) && PYTHONPATH=$(PYTHONPATH) pytest --cov=src/svc_catalogue --cov-report=term-missing
+	$(ACTIVATE) && PYTHONPATH=$(PYTHONPATH) pytest --cov=src/svc_catalogue --cov-report=term-missing  --cov-report=xml
 
 coverage:
 	$(ACTIVATE) && coverage html
