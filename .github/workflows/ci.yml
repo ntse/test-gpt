@@ -46,15 +46,18 @@ jobs:
           name: pip-audit
           path: pip-audit.json
 
-      - name: Build container image
-        run: |
-          docker build -t svc-catalogue:${{ github.sha }} .
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: svc-catalogue:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Generate OpenAPI spec
-        env:
-          PYTHONPATH: src
         run: |
-          python -m svc_catalogue.scripts.export_openapi --output openapi.json
+          make openapi
 
       - name: Publish OpenAPI artifact
         uses: actions/upload-artifact@v4
