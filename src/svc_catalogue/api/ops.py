@@ -1,7 +1,8 @@
 """Operational endpoints."""
+
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from sqlalchemy import text
 
 from .dependencies import DBSession

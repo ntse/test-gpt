@@ -1,4 +1,5 @@
 """CRUD operations for services."""
+
 from __future__ import annotations
 
 from typing import Optional, Sequence, Tuple
@@ -29,7 +30,9 @@ def create_service(session: Session, service_in: ServiceCreate) -> Service:
         session.flush()
     except IntegrityError as exc:
         session.rollback()
-        raise ServiceAlreadyExistsError("Service with this name already exists") from exc
+        raise ServiceAlreadyExistsError(
+            "Service with this name already exists"
+        ) from exc
     session.refresh(service)
     return service
 
@@ -62,7 +65,9 @@ def list_services(
     statement = select(Service)
 
     if owner_team:
-        statement = statement.where(func.lower(Service.owner_team) == owner_team.lower())
+        statement = statement.where(
+            func.lower(Service.owner_team) == owner_team.lower()
+        )
     if tier:
         statement = statement.where(Service.tier == tier)
     if lifecycle:
@@ -91,7 +96,9 @@ def list_services(
     return services, total
 
 
-def update_service(session: Session, service: Service, service_in: ServiceUpdate) -> Service:
+def update_service(
+    session: Session, service: Service, service_in: ServiceUpdate
+) -> Service:
     """Update a service with partial changes."""
     data = service_in.model_dump(exclude_unset=True, mode="json")
     for key, value in data.items():

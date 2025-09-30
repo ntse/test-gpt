@@ -14,8 +14,12 @@ def _create_payload(name: str, owner: str = "Team A") -> dict[str, object]:
     }
 
 
-def test_create_and_get_service(client: TestClient, auth_headers: dict[str, str]) -> None:
-    response = client.post("/api/v1/services", json=_create_payload("billing"), headers=auth_headers)
+def test_create_and_get_service(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    response = client.post(
+        "/api/v1/services", json=_create_payload("billing"), headers=auth_headers
+    )
     assert response.status_code == 201
     data = response.json()
     service_id = data["id"]
@@ -28,8 +32,12 @@ def test_create_and_get_service(client: TestClient, auth_headers: dict[str, str]
     UUID(service_id)
 
 
-def test_update_and_delete_service(client: TestClient, auth_headers: dict[str, str]) -> None:
-    create = client.post("/api/v1/services", json=_create_payload("payments"), headers=auth_headers)
+def test_update_and_delete_service(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    create = client.post(
+        "/api/v1/services", json=_create_payload("payments"), headers=auth_headers
+    )
     service_id = create.json()["id"]
 
     update_payload = {"owner_team": "Team B", "lifecycle": "deprecated"}
@@ -47,8 +55,14 @@ def test_update_and_delete_service(client: TestClient, auth_headers: dict[str, s
     assert missing.status_code == 404
 
 
-def test_list_filters_and_search(client: TestClient, auth_headers: dict[str, str]) -> None:
-    client.post("/api/v1/services", json=_create_payload("billing", "FinOps"), headers=auth_headers)
+def test_list_filters_and_search(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    client.post(
+        "/api/v1/services",
+        json=_create_payload("billing", "FinOps"),
+        headers=auth_headers,
+    )
     client.post(
         "/api/v1/services",
         json={

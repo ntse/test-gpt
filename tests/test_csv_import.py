@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
 
 
-def test_csv_import_create_and_update(client: TestClient, auth_headers: dict[str, str]) -> None:
+def test_csv_import_create_and_update(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
     csv_data = (
         "name,owner_team,tier,lifecycle,endpoints,tags,id\n"
         "billing,FinOps,gold,production,https://example.com/api,critical;,\n"
@@ -37,7 +39,9 @@ def test_csv_import_create_and_update(client: TestClient, auth_headers: dict[str
     assert "billing" in data["items"][0]["tags"]
 
 
-def test_csv_import_invalid_column(client: TestClient, auth_headers: dict[str, str]) -> None:
+def test_csv_import_invalid_column(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
     csv_data = (
         "name,owner_team,tier,lifecycle,endpoints,tags,unexpected\n"
         "billing,FinOps,gold,production,https://example.com/api,critical;,oops\n"

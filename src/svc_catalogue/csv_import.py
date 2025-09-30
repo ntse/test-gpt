@@ -1,9 +1,10 @@
 """CSV import utilities for services."""
+
 from __future__ import annotations
 
 import csv
 from io import StringIO, TextIOBase
-from typing import Iterable, Optional
+from typing import Optional
 from uuid import UUID
 
 from fastapi import UploadFile
@@ -60,7 +61,9 @@ def import_services_from_csv(session: Session, file_obj: TextIOBase) -> CSVImpor
     if unknown:
         raise CSVImportException(f"Unknown columns: {', '.join(sorted(unknown))}")
     if missing - {"id"}:
-        raise CSVImportException(f"Missing required columns: {', '.join(sorted(missing - {'id'}))}")
+        raise CSVImportException(
+            f"Missing required columns: {', '.join(sorted(missing - {'id'}))}"
+        )
 
     created = 0
     updated = 0

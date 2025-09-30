@@ -1,4 +1,5 @@
 """Database session and engine management."""
+
 from __future__ import annotations
 
 from contextlib import contextmanager
