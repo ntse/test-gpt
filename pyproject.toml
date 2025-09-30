@@ -34,9 +34,6 @@ dev = [
   "mypy==1.18.2"
 ]
 
-[tool.uv]
-dev-dependencies = [".[dev]"]
-
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = [
