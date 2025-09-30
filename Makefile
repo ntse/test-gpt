@@ -2,7 +2,7 @@ PYTHON ?= python3
 UV ?= uv
 UV_CACHE_DIR ?= $(PWD)/.uv-cache
 VENV ?= .venv
-ACTIVATE = source $(VENV)/bin/activate
+ACTIVATE = . $(VENV)/bin/activate
 PYTHONPATH := src
 
 .PHONY: install lint format test coverage run openapi docker-build docker-up docker-down clean
