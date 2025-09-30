@@ -23,7 +23,9 @@ class ServiceNotFoundError(RuntimeError):
 
 def create_service(session: Session, service_in: ServiceCreate) -> Service:
     """Create a new service entry."""
-    payload = service_in.model_dump(mode="json")
+    payload = service_in.model_dump(mode="python")
+    if "endpoints" in payload:
+        payload["endpoints"] = [str(url) for url in payload["endpoints"]]
     service = Service(**payload)
     session.add(service)
     try:
@@ -39,7 +41,7 @@ def create_service(session: Session, service_in: ServiceCreate) -> Service:
 
 def get_service(session: Session, service_id: UUID) -> Service:
     """Fetch a service by id."""
-    service = session.get(Service, str(service_id))
+    service = session.get(Service, service_id)
     if not service:
         raise ServiceNotFoundError("Service not found")
     return service
@@ -100,7 +102,9 @@ def update_service(
     session: Session, service: Service, service_in: ServiceUpdate
 ) -> Service:
     """Update a service with partial changes."""
-    data = service_in.model_dump(exclude_unset=True, mode="json")
+    data = service_in.model_dump(exclude_unset=True, mode="python")
+    if "endpoints" in data and data["endpoints"] is not None:
+        data["endpoints"] = [str(url) for url in data["endpoints"]]
     for key, value in data.items():
         setattr(service, key, value)
     session.add(service)
