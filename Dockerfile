@@ -8,10 +8,13 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends libpq5 && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install uv runner to manage project dependencies
+RUN pip install --no-cache-dir uv
 
+COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
+
+RUN uv pip install --system .
 
 EXPOSE 8000
 

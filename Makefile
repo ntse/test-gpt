@@ -6,9 +6,8 @@ PYTHONPATH := src
 .PHONY: install lint format test coverage run openapi docker-build docker-up docker-down clean
 
 install:
-	$(PYTHON) -m venv $(VENV)
-	$(ACTIVATE) && pip install --upgrade pip
-	$(ACTIVATE) && pip install -r requirements-dev.txt
+	uv venv --python $(PYTHON) $(VENV)
+	uv pip install --python $(VENV)/bin/python -e .[dev]
 
 lint:
 	$(ACTIVATE) && ruff check src tests

@@ -17,12 +17,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: "pip"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          uv pip install --system -e .[dev]
 
       - name: Lint
         run: |
@@ -42,7 +43,7 @@ jobs:
 
       - name: Dependency audit
         run: |
-          pip-audit --format json --output pip-audit.json
+          uvx pip-audit --format json --output pip-audit.json
 
       - name: Upload audit report
         uses: actions/upload-artifact@v4
